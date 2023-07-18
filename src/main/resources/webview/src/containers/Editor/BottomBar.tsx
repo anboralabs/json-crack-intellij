@@ -2,23 +2,12 @@ import React from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { Badge, Flex, Popover, Text } from "@mantine/core";
-import toast from "react-hot-toast";
-import {
-  AiOutlineCloudSync,
-  AiOutlineCloudUpload,
-  AiOutlineLink,
-  AiOutlineLock,
-  AiOutlineUnlock,
-} from "react-icons/ai";
-import { MdReportGmailerrorred, MdOutlineCheckCircleOutline } from "react-icons/md";
+import { Flex, Popover, Text } from "@mantine/core";
+import { MdOutlineCheckCircleOutline, MdReportGmailerrorred } from "react-icons/md";
 import { TbTransform } from "react-icons/tb";
-import { VscAccount, VscSync, VscSyncIgnored, VscWorkspaceTrusted } from "react-icons/vsc";
-import { saveToCloud, updateJson } from "src/services/json";
+import { VscSync, VscSyncIgnored } from "react-icons/vsc";
 import useFile from "src/store/useFile";
-import useModal from "src/store/useModal";
 import useStored from "src/store/useStored";
-import useUser from "src/store/useUser";
 
 const StyledBottomBar = styled.div`
   display: flex;
@@ -84,88 +73,18 @@ const StyledImg = styled.img<{ light: boolean }>`
 export const BottomBar = () => {
   const { query, replace } = useRouter();
   const data = useFile(state => state.fileData);
-  const user = useUser(state => state.user);
-  const premium = useUser(state => state.premium);
   const lightmode = useStored(state => state.lightmode);
   const toggleLiveTransform = useStored(state => state.toggleLiveTransform);
   const liveTransform = useStored(state => state.liveTransform);
   const hasChanges = useFile(state => state.hasChanges);
   const error = useFile(state => state.error);
-  const getContents = useFile(state => state.getContents);
   const setContents = useFile(state => state.setContents);
 
-  const setVisible = useModal(state => state.setVisible);
-  const setHasChanges = useFile(state => state.setHasChanges);
-  const getFormat = useFile(state => state.getFormat);
   const [isPrivate, setIsPrivate] = React.useState(false);
-  const [isUpdating, setIsUpdating] = React.useState(false);
 
   React.useEffect(() => {
     setIsPrivate(data?.private ?? true);
   }, [data]);
-
-  const handleSaveJson = React.useCallback(async () => {
-    if (!user) return setVisible("login")(true);
-
-    if (
-      hasChanges &&
-      !error &&
-      (typeof query.json === "string" || typeof query.json === "undefined")
-    ) {
-      try {
-        setIsUpdating(true);
-        toast.loading("Saving document...", { id: "fileSave" });
-        const res = await saveToCloud(query?.json ?? null, getContents(), getFormat());
-
-        if (res.errors && res.errors.items.length > 0) throw res.errors;
-        if (res.data._id) replace({ query: { json: res.data._id } });
-
-        toast.success("Document saved to cloud", { id: "fileSave" });
-        setHasChanges(false);
-      } catch (error: any) {
-        if (error?.items?.length > 0) {
-          return toast.error(error.items[0].message, { id: "fileSave", duration: 5000 });
-        }
-
-        toast.error("Failed to save document!", { id: "fileSave" });
-      } finally {
-        setIsUpdating(false);
-      }
-    }
-  }, [
-    error,
-    getContents,
-    getFormat,
-    hasChanges,
-    query.json,
-    replace,
-    setHasChanges,
-    setVisible,
-    user,
-  ]);
-
-  const handleLoginClick = () => {
-    if (user) return setVisible("account")(true);
-    else setVisible("login")(true);
-  };
-
-  const setPrivate = async () => {
-    try {
-      if (!query.json) return handleSaveJson();
-      setIsUpdating(true);
-
-      const res = await updateJson(query.json as string, { private: !isPrivate });
-
-      if (!res.errors?.items.length) {
-        setIsPrivate(res.data.private);
-        toast.success(`Document set to ${isPrivate ? "public" : "private"}.`);
-      } else throw res.errors;
-    } catch (error) {
-      toast.error("An error occurred while updating document!");
-    } finally {
-      setIsUpdating(false);
-    }
-  };
 
   return (
     <StyledBottomBar>
@@ -175,21 +94,6 @@ export const BottomBar = () => {
         </Head>
       )}
       <StyledLeft>
-        <StyledBottomBarItem onClick={handleLoginClick}>
-          <VscAccount />
-          {user ? user.name : "Login"}
-          {premium && (
-            <Badge size="sm" color="orange" radius="sm" fw="bold">
-              PREMIUM
-            </Badge>
-          )}
-        </StyledBottomBarItem>
-        {!premium && (
-          <StyledBottomBarItem onClick={() => setVisible("premium")(true)}>
-            <VscWorkspaceTrusted />
-            Upgrade to Premium
-          </StyledBottomBarItem>
-        )}
         <StyledBottomBarItem error={!!error}>
           {error ? (
             <Popover width="auto" shadow="md" position="top" withArrow>
@@ -210,24 +114,6 @@ export const BottomBar = () => {
             </Flex>
           )}
         </StyledBottomBarItem>
-        <StyledBottomBarItem onClick={handleSaveJson} disabled={isUpdating}>
-          {hasChanges ? <AiOutlineCloudUpload /> : <AiOutlineCloudSync />}
-          {hasChanges ? (query?.json ? "Unsaved Changes" : "Create Document") : "Saved"}
-        </StyledBottomBarItem>
-        {data && (
-          <>
-            {typeof data.private !== "undefined" && (
-              <StyledBottomBarItem onClick={setPrivate} disabled={isUpdating}>
-                {isPrivate ? <AiOutlineLock /> : <AiOutlineUnlock />}
-                {isPrivate ? "Private" : "Public"}
-              </StyledBottomBarItem>
-            )}
-            <StyledBottomBarItem onClick={() => setVisible("share")(true)} disabled={isPrivate}>
-              <AiOutlineLink />
-              Share
-            </StyledBottomBarItem>
-          </>
-        )}
         {liveTransform ? (
           <StyledBottomBarItem onClick={() => toggleLiveTransform(false)}>
             <VscSync />
@@ -246,25 +132,6 @@ export const BottomBar = () => {
           </StyledBottomBarItem>
         )}
       </StyledLeft>
-
-      <StyledRight>
-        <a
-          href="https://www.altogic.com/?utm_source=jsoncrack&utm_medium=referral&utm_campaign=sponsorship"
-          rel="sponsored noreferrer"
-          target="_blank"
-        >
-          <StyledBottomBarItem>
-            Powered by
-            <StyledImg
-              height="20"
-              width="54"
-              src="https://www.altogic.com/img/logo_dark.svg"
-              alt="powered by altogic"
-              light={lightmode}
-            />
-          </StyledBottomBarItem>
-        </a>
-      </StyledRight>
     </StyledBottomBar>
   );
 };

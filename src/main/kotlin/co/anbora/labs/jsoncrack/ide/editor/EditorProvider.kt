@@ -8,6 +8,8 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 
+private const val EDITOR_TYPE_ID = "co.anbora.labs.jsoncrack.editor"
+
 
 class EditorProvider : FileEditorProvider, DumbAware  {
     override fun accept(project: Project, file: VirtualFile): Boolean {
@@ -16,7 +18,7 @@ class EditorProvider : FileEditorProvider, DumbAware  {
 
     override fun createEditor(project: Project, file: VirtualFile): FileEditor = Editor(project, file)
 
-    override fun getEditorTypeId() = "json-crack-editor"
+    override fun getEditorTypeId() = EDITOR_TYPE_ID
 
-    override fun getPolicy() = FileEditorPolicy.PLACE_BEFORE_DEFAULT_EDITOR
+    override fun getPolicy() = FileEditorPolicy.PLACE_AFTER_DEFAULT_EDITOR
 }

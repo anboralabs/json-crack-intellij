@@ -7,7 +7,6 @@ import { CustomNode } from "src/components/CustomNode";
 import useToggleHide from "src/hooks/useToggleHide";
 import useGraph from "src/store/useGraph";
 import useModal from "src/store/useModal";
-import useUser from "src/store/useUser";
 import { Loading } from "../../layout/Loading";
 import { ErrorView } from "./ErrorView";
 import { PremiumView } from "./PremiumView";
@@ -59,7 +58,7 @@ const StyledEditorWrapper = styled.div<{ widget: boolean }>`
 
 export const Graph = ({ isWidget = false }: GraphProps) => {
   const { validateHiddenNodes } = useToggleHide();
-  const isPremium = useUser(state => state.premium);
+  const isPremium = false;
   const setLoading = useGraph(state => state.setLoading);
   const setZoomPanPinch = useGraph(state => state.setZoomPanPinch);
   const centerView = useGraph(state => state.centerView);

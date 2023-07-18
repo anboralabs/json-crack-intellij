@@ -1,16 +1,13 @@
 import React from "react";
-import { Modal, Stack, Text, ScrollArea, ModalProps, Button } from "@mantine/core";
+import { Button, Modal, ModalProps, ScrollArea, Stack, Text } from "@mantine/core";
 import { Prism } from "@mantine/prism";
 import Editor from "@monaco-editor/react";
 import vsDark from "prism-react-renderer/themes/vsDark";
 import vsLight from "prism-react-renderer/themes/vsLight";
-import { VscLock } from "react-icons/vsc";
 import { shallow } from "zustand/shallow";
 import useFile from "src/store/useFile";
 import useGraph from "src/store/useGraph";
-import useModal from "src/store/useModal";
 import useStored from "src/store/useStored";
-import useUser from "src/store/useUser";
 import { isIframe } from "src/utils/widget";
 
 const dataToString = (data: any) => {
@@ -47,9 +44,7 @@ const CodeBlock: React.FC<{ children: any; [key: string]: any }> = ({
 };
 
 export const NodeModal: React.FC<ModalProps> = ({ opened, onClose }) => {
-  const isPremium = useUser(state => state.premium);
   const editContents = useFile(state => state.editContents);
-  const setVisible = useModal(state => state.setVisible);
   const lightmode = useStored(state => (state.lightmode ? "light" : "vs-dark"));
   const [nodeData, path, isParent] = useGraph(
     state => [
@@ -64,7 +59,6 @@ export const NodeModal: React.FC<ModalProps> = ({ opened, onClose }) => {
 
   const onUpdate = () => {
     if (!value) return setEditMode(false);
-    if (!isPremium) return;
     editContents(path!, value, () => {
       setEditMode(false);
       onModalClose();
@@ -78,9 +72,7 @@ export const NodeModal: React.FC<ModalProps> = ({ opened, onClose }) => {
   };
 
   const onEditClick = () => {
-    if (isPremium) return setEditMode(true);
-    setVisible("premium")(true);
-    onModalClose();
+    return setEditMode(true);
   };
 
   const isEditVisible = React.useMemo(
@@ -115,7 +107,7 @@ export const NodeModal: React.FC<ModalProps> = ({ opened, onClose }) => {
         </Stack>
         {isEditVisible && (
           <Stack spacing="xs">
-            {editMode ? (
+            {
               <Button
                 variant={value ? "filled" : "light"}
                 color={value ? "green" : "blue"}
@@ -123,11 +115,7 @@ export const NodeModal: React.FC<ModalProps> = ({ opened, onClose }) => {
               >
                 {value.length ? "Update Document" : "Cancel"}
               </Button>
-            ) : (
-              <Button onClick={onEditClick} leftIcon={!isPremium && <VscLock />} variant="filled">
-                Edit
-              </Button>
-            )}
+            }
           </Stack>
         )}
         <Text fz="sm" fw={700}>

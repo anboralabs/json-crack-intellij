@@ -59,7 +59,6 @@ class LoadableJCEFHtmlPanel(
 
     init {
         // White blinking Cause: https://youtrack.jetbrains.com/issue/IDEA-232927/JCEF-components-background-has-wrong-color-that-is-visible-when-opening-it-or-switching-to-it
-        multiPanel.isVisible = false
 
         if (url != null) {
             htmlPanel.loadURL(url)
@@ -71,20 +70,22 @@ class LoadableJCEFHtmlPanel(
 
         ApplicationManager.getApplication().invokeLater {
             Disposer.register(this@LoadableJCEFHtmlPanel, alarm)
-            multiPanel.select(CONTENT_KEY, true).also {
-                htmlPanel.createImmediately()
-            }
+            multiPanel.select(CONTENT_KEY, true)
         }
     }
 
     init {
         htmlPanel.jbCefClient.addLoadHandler(object : CefLoadHandlerAdapter() {
             override fun onLoadStart(browser: CefBrowser?, frame: CefFrame?, transitionType: CefRequest.TransitionType?) {
-                alarm.addRequest({ htmlPanel.setHtml(timeoutCallback!!) }, Registry.intValue("html.editor.timeout", 20000))
+                if (!alarm.isDisposed) {
+                    alarm.addRequest({ htmlPanel.setHtml(timeoutCallback!!) }, Registry.intValue("html.editor.timeout", 20000))
+                }
             }
 
             override fun onLoadEnd(browser: CefBrowser?, frame: CefFrame?, httpStatusCode: Int) {
-                alarm.cancelAllRequests()
+                if (!alarm.isDisposed) {
+                    alarm.cancelAllRequests()
+                }
             }
 
             override fun onLoadingStateChange(browser: CefBrowser?, isLoading: Boolean, canGoBack: Boolean, canGoForward: Boolean) {
@@ -100,17 +101,14 @@ class LoadableJCEFHtmlPanel(
     fun startLoading() {
         loadingPanel.startLoading()
         multiPanel.select(LOADING_KEY, true)
-        multiPanel.isVisible = true
     }
 
     fun stopLoading() {
-        multiPanel.isVisible = true
         multiPanel.select(CONTENT_KEY, true)
         loadingPanel.stopLoading()
     }
 
     override fun dispose() {
-        multiPanel.isVisible = false
         alarm.dispose()
     }
 }

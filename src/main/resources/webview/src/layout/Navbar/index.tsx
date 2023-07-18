@@ -59,21 +59,6 @@ export const Navbar = () => {
           >
             GitHub
           </Button>
-          <Link href="/docs" prefetch={false}>
-            <Button variant="subtle" color="dark" radius="md">
-              Docs
-            </Button>
-          </Link>
-          <Link href="/oss" prefetch={false}>
-            <Button variant="subtle" color="dark" radius="md">
-              Supporters
-            </Button>
-          </Link>
-          <Link href="/pricing" prefetch={false}>
-            <Button variant="subtle" color="dark" radius="md">
-              Pricing
-            </Button>
-          </Link>
         </Middle>
         <Right>
           <Button
@@ -86,12 +71,7 @@ export const Navbar = () => {
           >
             Star us on GitHub
           </Button>
-          <Link href="/sign-in" prefetch={false}>
-            <Button variant="light" radius="md" className="hide-mobile">
-              Sign In
-            </Button>
-          </Link>
-          <Link href="/editor" prefetch={false}>
+          <Link href="/index" prefetch={false}>
             <Button color="teal" radius="md">
               Editor
             </Button>

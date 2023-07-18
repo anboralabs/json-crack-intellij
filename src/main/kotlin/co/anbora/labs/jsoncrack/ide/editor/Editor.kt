@@ -24,7 +24,7 @@ class Editor(project: Project, private val file: VirtualFile) : FileEditor, Dumb
     private val lifetime = lifetimeDef.lifetime
     private val userDataHolder = UserDataHolderBase()
 
-    override fun getName(): String = "Diagram"
+    override fun getName(): String = "JSON Crack"
     override fun getFile() = file
 
     private var view : WebView = WebView(lifetime, file)
@@ -49,6 +49,10 @@ class Editor(project: Project, private val file: VirtualFile) : FileEditor, Dumb
         messageBus.connect().subscribe(EditorColorsManager.TOPIC, EditorColorsListener {
             view.reload(true)
         })
+
+        view.initialized().then {
+            view.stopLoading()
+        }
     }
 
     override fun <T : Any?> getUserData(key: Key<T>): T? {

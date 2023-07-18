@@ -15,7 +15,7 @@ module.exports = withSentryConfig(
   config,
   {
     silent: true,
-    org: "aykut-sarac",
+    org: "anbora-labs",
     project: "json-crack",
   },
   {

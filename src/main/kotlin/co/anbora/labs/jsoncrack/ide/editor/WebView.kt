@@ -14,6 +14,7 @@ import org.cef.CefApp
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.handler.CefLifeSpanHandlerAdapter
+import org.cef.handler.CefLoadHandler
 import org.cef.handler.CefLoadHandlerAdapter
 import org.jetbrains.concurrency.AsyncPromise
 import org.jetbrains.concurrency.Promise
@@ -103,35 +104,36 @@ class WebView(lifetime: Lifetime, file: VirtualFile) {
             CefApp.getInstance().registerSchemeHandlerFactory(
                 "https", "json-crack",
                 SchemeHandlerFactory { uri: URI ->
-                    if (uri.path == "/index.html") {
-                        data class InitialData(
-                            val baseUrl: String,
-                            val file: CharSequence,
-                            val theme: String
-                        )
+                    when (uri.path) {
+                        "/dataJsonCrack.js" -> {
+                            data class InitialData(
+                                val baseUrl: String,
+                                val file: CharSequence,
+                                val theme: String
+                            )
 
-                        val text = WebView::class.java.getResourceAsStream("/webview/dist/index.html")!!.reader()
-                            .readText()
-                        val updatedText = text.replace(
-                            "\$\$initialData\$\$",
-                            mapper.writeValueAsString(
-                                InitialData(
-                                    "https://bpmn2-plugin",
-                                    LoadTextUtil.loadText(file),
-                                    theme.toString()
+                            val text = WebView::class.java.getResourceAsStream("/webview/out/dataJsonCrack.js")!!.reader()
+                                .readText()
+                            val updatedText = text.replace(
+                                "\$\$initialData\$\$",
+                                mapper.writeValueAsString(
+                                    InitialData(
+                                        "https://json-crack",
+                                        LoadTextUtil.loadText(file),
+                                        theme.toString()
+                                    )
                                 )
                             )
-                        )
-                        val result = updatedText.replace(
-                            "\$\$initialColor\$\$",
-                            if (theme == Theme.DARK) "black" else "white"
-                        )
-                        result.byteInputStream()
-                    } else {
-                        WebView::class.java.getResourceAsStream("/webview/dist" + uri.path)
+                            updatedText.byteInputStream()
+                        }
+                        else -> {
+                            WebView::class.java.getResourceAsStream("/webview/out/${uri.path}")
+                        }
                     }
                 }
-            ).also { successful -> assert(successful) }
+            ).also { successful ->
+                assert(successful)
+            }
         }
     }
 
@@ -139,6 +141,10 @@ class WebView(lifetime: Lifetime, file: VirtualFile) {
         panel.browser.cefBrowser.reloadIgnoreCache()
     } else {
         panel.browser.cefBrowser.reload()
+    }
+
+    fun stopLoading() {
+        panel.stopLoading()
     }
 
     fun openDevTools() {

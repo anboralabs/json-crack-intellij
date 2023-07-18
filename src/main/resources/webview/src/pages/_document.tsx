@@ -1,5 +1,4 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import Script from "next/script";
 import { createGetInitialProps } from "@mantine/next";
 import { SeoTags } from "src/components/SeoTags";
 
@@ -20,13 +19,10 @@ class MyDocument extends Document {
           <meta name="theme-color" content="#36393E" />
           <link rel="manifest" href="/manifest.json" />
           <link rel="icon" href="/favicon.ico" />
+          <script type="text/javascript" src="/dataJsonCrack.js" defer />
         </Head>
         <body>
           <Main />
-          <Script
-            src="https://m.servedby-buysellads.com/monetization.js"
-            strategy="beforeInteractive"
-          />
           <NextScript />
         </body>
       </Html>

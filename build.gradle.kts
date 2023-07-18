@@ -35,9 +35,6 @@ node {
 tasks.register<YarnTask>("buildYarn") {
     dependsOn(tasks.yarn)
     yarnCommand.set(listOf("run", "build"))
-    args.set(listOf(
-        "--out-dir", "${project.projectDir}/src/main/resources/webview/dist"
-    ))
     inputs.dir("src/")
 }
 

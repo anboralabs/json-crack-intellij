@@ -8,7 +8,6 @@ import { GoogleAnalytics } from "src/components/GoogleAnalytics";
 import { monaSans } from "src/constants/customFonts";
 import GlobalStyle from "src/constants/globalStyle";
 import { lightTheme } from "src/constants/theme";
-import { ExternalMode } from "src/layout/DevMode";
 import { ModalController } from "src/layout/ModalController";
 
 const queryClient = new QueryClient({
@@ -57,7 +56,6 @@ function JsonCrack({ Component, pageProps }: AppProps) {
                 },
               }}
             />
-            <ExternalMode />
           </MantineProvider>
         </ThemeProvider>
       </QueryClientProvider>
