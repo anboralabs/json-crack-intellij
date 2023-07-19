@@ -4,7 +4,7 @@ plugins {
     id("java")
     id("com.github.node-gradle.node") version "5.0.0" // NodeJS support
     id("org.jetbrains.kotlin.jvm") version "1.8.21"
-    id("org.jetbrains.intellij") version "1.13.3"
+    id("org.jetbrains.intellij") version "1.15.0"
 }
 
 group = "co.anbora.labs"
@@ -40,6 +40,7 @@ tasks.register<YarnTask>("buildYarn") {
 
 tasks.register<Delete>("cleanYarnModules") {
     delete("${project.projectDir}/src/main/resources/webview/node_modules")
+    delete("${project.projectDir}/src/main/resources/webview/.next")
 }
 
 tasks {
@@ -47,6 +48,10 @@ tasks {
     withType<JavaCompile> {
         sourceCompatibility = "17"
         targetCompatibility = "17"
+    }
+
+    withType<ProcessResources> {
+        dependsOn("buildYarn", "cleanYarnModules")
     }
 
     yarn {
@@ -62,6 +67,8 @@ tasks {
     patchPluginXml {
         sinceBuild.set("222")
         untilBuild.set("232.*")
+        changeNotes.set(file("src/main/html/change-notes.html").inputStream().readBytes().toString(Charsets.UTF_8))
+        pluginDescription.set(file("src/main/html/description.html").inputStream().readBytes().toString(Charsets.UTF_8))
     }
 
     publishPlugin {
