@@ -4,11 +4,11 @@ plugins {
     id("java")
     id("com.github.node-gradle.node") version "5.0.0" // NodeJS support
     id("org.jetbrains.kotlin.jvm") version "1.9.0"
-    id("org.jetbrains.intellij") version "1.16.0"
+    id("org.jetbrains.intellij") version "1.16.1"
 }
 
 group = "co.anbora.labs"
-version = "1.2.0"
+version = "1.2.1"
 
 repositories {
     mavenCentral()
