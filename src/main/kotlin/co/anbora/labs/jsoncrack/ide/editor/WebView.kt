@@ -4,17 +4,17 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import co.anbora.labs.jsoncrack.ide.webView.LoadableJCEFHtmlPanel
 import co.anbora.labs.jsoncrack.ide.webView.SchemeHandlerFactory
+import com.google.gson.Gson
 import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.fileEditor.impl.LoadTextUtil
 import com.intellij.openapi.vfs.VirtualFile
-import com.jetbrains.rd.util.lifetime.Lifetime
 import com.intellij.ui.jcef.JBCefJSQuery
+import com.jetbrains.rd.util.lifetime.Lifetime
 import org.cef.CefApp
 import org.cef.browser.CefBrowser
 import org.cef.browser.CefFrame
 import org.cef.handler.CefLifeSpanHandlerAdapter
-import org.cef.handler.CefLoadHandler
 import org.cef.handler.CefLoadHandlerAdapter
 import org.jetbrains.concurrency.AsyncPromise
 import org.jetbrains.concurrency.Promise
@@ -31,6 +31,8 @@ class WebView(lifetime: Lifetime, file: VirtualFile) {
     private val mapper = jacksonObjectMapper().apply {
         configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     }
+
+    private val gson = Gson()
 
     fun initialized(): Promise<Unit> {
         return _initializedPromise
@@ -108,18 +110,19 @@ class WebView(lifetime: Lifetime, file: VirtualFile) {
                         "/dataJsonCrack.js" -> {
                             data class InitialData(
                                 val baseUrl: String,
-                                val file: CharSequence,
+                                val file: String,
                                 val theme: String
                             )
 
                             val text = WebView::class.java.getResourceAsStream("/webview/out/dataJsonCrack.js")!!.reader()
                                 .readText()
+
                             val updatedText = text.replace(
                                 "\$\$initialData\$\$",
-                                mapper.writeValueAsString(
+                                gson.toJson(
                                     InitialData(
                                         "https://json-crack",
-                                        LoadTextUtil.loadText(file),
+                                        LoadTextUtil.loadText(file).toString(),
                                         theme.toString()
                                     )
                                 )
