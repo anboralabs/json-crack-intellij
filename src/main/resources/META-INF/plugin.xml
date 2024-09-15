@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>co.anbora.labs.jsoncrack</id>
-    <name>Jsoncrack</name>
+    <name>JSonCrack</name>
     <vendor email="anboralabs@gmail.com" url="https://labs.anbora.co">Anbora-labs</vendor>
 
     <!-- Product and plugin compatibility requirements.
