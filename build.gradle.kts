@@ -7,7 +7,7 @@ plugins {
     id("java")
     id("com.github.node-gradle.node") version "5.0.0" // NodeJS support
     id("org.jetbrains.kotlin.jvm") version "2.0.0"
-    id("org.jetbrains.intellij.platform") version "2.0.0-beta7"
+    id("org.jetbrains.intellij.platform") version "2.0.1"
 }
 
 group = properties("pluginGroup").get()
@@ -72,6 +72,8 @@ intellijPlatform {
             recommended()
         }
     }
+
+    buildSearchableOptions = false
 }
 
 // Set the Nodejs language
