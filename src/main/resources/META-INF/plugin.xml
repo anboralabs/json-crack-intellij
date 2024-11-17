@@ -10,6 +10,11 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
+        <projectConfigurable
+                groupId="tools"
+                displayName="JSonCrack"
+                id="preference.JSonCrackFileTypeConfigurable"
+                instance="co.anbora.labs.jsoncrack.ide.settings.FileTypeSettingsConfigurable" />
         <fileEditorProvider implementation="co.anbora.labs.jsoncrack.ide.editor.EditorProvider" />
     </extensions>
 </idea-plugin>
