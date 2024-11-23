@@ -14,7 +14,7 @@ class FileTypeSettingsConfigurable(
 
     override fun createComponent(): JComponent = dialog
 
-    override fun isModified(): Boolean = fileTypeSettings.extensions().size != dialog.getExtensions().size
+    override fun isModified(): Boolean = fileTypeSettings.extensions() != dialog.getExtensions()
 
     override fun apply() {
         fileTypeSettings.addExtensions(dialog.getExtensions())
