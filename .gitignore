@@ -508,4 +508,7 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+### Intellij plugins sdk ###
+.intellijPlatform/
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij,intellij+iml,intellij+all,windows,java,kotlin,gradle,macos,linux,node
