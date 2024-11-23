@@ -7,6 +7,8 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
 
+    <resource-bundle>messages.jsoncrack</resource-bundle>
+
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
@@ -16,5 +18,7 @@
                 id="preference.JSonCrackFileTypeConfigurable"
                 instance="co.anbora.labs.jsoncrack.ide.settings.FileTypeSettingsConfigurable" />
         <fileEditorProvider implementation="co.anbora.labs.jsoncrack.ide.editor.EditorProvider" />
+
+        <applicationService serviceImplementation="co.anbora.labs.jsoncrack.ide.fileType.FileTypeService"/>
     </extensions>
 </idea-plugin>

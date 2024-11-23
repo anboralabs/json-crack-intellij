@@ -2,9 +2,9 @@ package co.anbora.labs.jsoncrack.ide
 
 import com.intellij.openapi.vfs.VirtualFile
 
-private val SUPPORTED_EXTENSIONS = arrayOf(".json")
+val SUPPORTED_EXTENSIONS = setOf(".json")
 
-fun VirtualFile?.isJsonFile(): Boolean {
+fun VirtualFile?.isJsonFile(extensions: Set<String>): Boolean {
     if (this == null) {
         return false
     }
@@ -12,8 +12,6 @@ fun VirtualFile?.isJsonFile(): Boolean {
     if (this.isDirectory || !this.exists()) {
         return false
     }
-
-    val extensions = SUPPORTED_EXTENSIONS
 
     return extensions.any { ext -> this.name.lowercase().endsWith(ext) }
 }

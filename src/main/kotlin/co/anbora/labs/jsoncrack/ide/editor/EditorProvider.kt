@@ -1,5 +1,6 @@
 package co.anbora.labs.jsoncrack.ide.editor
 
+import co.anbora.labs.jsoncrack.ide.fileType.FileTypeService.Companion.fileTypeSettings
 import co.anbora.labs.jsoncrack.ide.isJsonFile
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorPolicy
@@ -13,7 +14,7 @@ private const val EDITOR_TYPE_ID = "co.anbora.labs.jsoncrack.editor"
 
 class EditorProvider : FileEditorProvider, DumbAware  {
     override fun accept(project: Project, file: VirtualFile): Boolean {
-        return file.isJsonFile()
+        return file.isJsonFile(fileTypeSettings.extensions())
     }
 
     override fun createEditor(project: Project, file: VirtualFile): FileEditor = Editor(project, file)
