@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>co.anbora.labs.jsoncrack</id>
     <name>JSonCrack</name>
-    <vendor email="anboralabs@gmail.com" url="https://labs.anbora.co">Anbora-labs</vendor>
+    <vendor email="support@anbora.co" url="https://labs.anbora.co">Anbora-labs</vendor>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
