@@ -7,7 +7,7 @@ plugins {
     id("java")
     id("com.github.node-gradle.node") version "5.0.0" // NodeJS support
     id("org.jetbrains.kotlin.jvm") version "2.0.0"
-    id("org.jetbrains.intellij.platform") version "2.2.1"
+    id("org.jetbrains.intellij.platform") version "2.4.0"
 }
 
 group = properties("pluginGroup").get()
