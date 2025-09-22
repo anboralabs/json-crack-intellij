@@ -1,4 +1,5 @@
 import com.github.gradle.node.yarn.task.YarnTask
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
@@ -7,7 +8,7 @@ plugins {
     id("java")
     id("com.github.node-gradle.node") version "5.0.0" // NodeJS support
     id("org.jetbrains.kotlin.jvm") version "2.2.0"
-    id("org.jetbrains.intellij.platform") version "2.7.2"
+    id("org.jetbrains.intellij.platform") version "2.9.0"
 }
 
 group = properties("pluginGroup").get()
@@ -39,7 +40,6 @@ dependencies {
         // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
         plugins(properties("platformPlugins").map { it.split(',') })
 
-        instrumentationTools()
         pluginVerifier()
         // testFramework(TestFrameworkType.Platform.JUnit4)
     }
@@ -75,6 +75,7 @@ intellijPlatform {
 
     pluginVerification {
         ides {
+            create(IntelliJPlatformType.IntellijIdeaUltimate, properties("platformVersion").get())
             recommended()
         }
     }
