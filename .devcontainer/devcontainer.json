@@ -1,0 +1,44 @@
+{
+  "name": "JSonCrack Plugin",
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "16gb",
+    "storage": "80gb"
+  },
+  "build": {
+    "context": "..",
+    "dockerfile": "../.gitpod.Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "runArgs": [ "--shm-size=2gb" ], // Increase /dev/shm size for GUI applications that need it
+  "privileged": true,
+  "postStartCommand": {
+    "vnc": "sudo service dbus start && cd $HOME && vncserver -disableBasicAuth -alwaysshared"
+  },
+  // Mount the Docker socket from the host to enable Docker-in-Docker functionality
+  "mounts": [
+    {
+      "source": "/var/run/docker.sock",
+      "target": "/var/run/docker.sock",
+      "type": "bind"
+    }
+  ],
+  "customizations": {
+    "jetbrains": {
+      "plugins": [
+        "DevKit",
+        "org.jetbrains.junie"
+      ]
+    }
+  },
+  "forwardPorts": [
+    5901
+  ],
+  "portsAttributes": {
+    "5901": {
+      "label": "KasmVNC"
+    }
+  }
+}
