@@ -5,7 +5,6 @@ import com.intellij.ide.plugins.MultiPanel
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.invokeLater
-import com.intellij.openapi.editor.EditorBundle
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.util.registry.Registry
@@ -24,7 +23,7 @@ import javax.swing.JComponent
 
 class LoadableJCEFHtmlPanel(
     url: String? = null, html: String? = null,
-    var timeoutCallback: String? = EditorBundle.message("message.html.editor.timeout")
+    var timeoutCallback: String? = "Loading failed. Please try later."
 ) : Disposable {
     private val isDarkEditor: Boolean = EditorColorsManager.getInstance().isDarkEditor
     private val alarm = Alarm(Alarm.ThreadToUse.SWING_THREAD, this)
